@@ -34,10 +34,10 @@ export const loginUser = async (req, res) => {
     res.json({ status: false });
     return;
   }
-  try {
-    const user = await getUser(kakaoId);
+  const user = await getUser(kakaoId);
+  if (user) {
     res.json({ ...user, status: true, register: true });
-  } catch (e) {
+  } else {
     res.json({ register: false });
   }
 };
