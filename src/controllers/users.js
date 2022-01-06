@@ -34,7 +34,9 @@ export const loginUser = async (req, res) => {
     res.json({ status: false });
     return;
   }
+
   const user = await getUser(kakaoId);
+
   if (user) {
     res.json({ ...user, status: true, register: true });
   } else {
@@ -44,10 +46,13 @@ export const loginUser = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   const kakaoId = await getUserId(req.body.accessToken);
-  if (isUserExists(kakaoId)) {
+
+  if (await isUserExists(kakaoId)) {
     res.status(409).json({ status: false });
     return;
   }
-  const user = await client.user.create({ data: req.body });
+
+  delete req.body["accessToken"];
+  const user = await client.user.create({ data: { ...req.body, id: kakaoId } });
   res.json(user);
 };
