@@ -5,7 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "migrate": "npx prisma migrate dev --preview-feature",
+    "studio": "npx prisma studio"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,12 @@
   },
   "homepage": "https://github.com/MadCampBreakAll/camp-2-backend#readme",
   "dependencies": {
+    "@prisma/client": "^3.7.0",
     "express": "^4.17.2",
     "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "prettier-plugin-prisma": "^3.7.0",
+    "prisma": "^3.7.0"
   }
 }
