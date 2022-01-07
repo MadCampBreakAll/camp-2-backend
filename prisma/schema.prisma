@@ -11,32 +11,43 @@ datasource db {
 }
 
 model User {
-  id           Int     @id
-  nickname     String  @db.VarChar(20)
-  writtenPages Page[]  @relation("user")
-  nextPages    Page[]  @relation("nextUser")
-  diaries      Diary[]
-  body         Int
-  bodyColor    String  @db.Char(7)
-  blushColor   String  @db.Char(7)
-  font         String  @db.VarChar(20)
-  item         Int
+  id              String   @id @db.Char(13)
+  nickname        String   @db.VarChar(20)
+  friends         Friend[] @relation("userFriend")
+  friendsRelation Friend[] @relation("friendUser")
+  writtenPages    Page[]   @relation("user")
+  nextPages       Page[]   @relation("nextUser")
+  diaries         Diary[]
+  body            Int
+  bodyColor       Int
+  blushColor      Int
+  font            Int
+  item            Int
+}
+
+model Friend {
+  user     User   @relation("userFriend", fields: [userId], references: [id])
+  userId   String @db.Char(13)
+  friend   User   @relation("friendUser", fields: [friendId], references: [id])
+  friendId String @db.Char(13)
+  status   Int
+
+  @@id([userId, friendId])
 }
 
 model Diary {
   id         Int      @id @default(autoincrement())
   title      String   @db.VarChar(20)
   created_at DateTime @default(now())
-  color      String   @db.Char(7)
   Users      User[]
 }
 
 model Page {
   id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id], name: "user")
-  userId     Int
+  userId     String   @db.Char(13)
   nextUser   User     @relation(fields: [nextUserId], references: [id], name: "nextUser")
-  nextUserId Int
+  nextUserId String   @db.Char(13)
   title      String   @db.VarChar(20)
   body       String   @db.Text
   created_at DateTime @default(now())
