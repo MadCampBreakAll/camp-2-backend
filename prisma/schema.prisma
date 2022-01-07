@@ -11,18 +11,19 @@ datasource db {
 }
 
 model User {
-  id              String   @id @db.Char(13)
-  nickname        String   @db.VarChar(20)
-  friends         Friend[] @relation("userFriend")
-  friendsRelation Friend[] @relation("friendUser")
-  writtenPages    Page[]   @relation("user")
-  nextPages       Page[]   @relation("nextUser")
-  diaries         Diary[]
+  id              String             @id @db.Char(13)
+  nickname        String             @db.VarChar(20)
+  friends         Friend[]           @relation("userFriend")
+  friendsRelation Friend[]           @relation("friendUser")
+  writtenPages    Page[]             @relation("user")
+  nextPages       Page[]             @relation("nextUser")
+  chamyeoDiaries  ChamyeoUserDiary[]
   body            Int
   bodyColor       Int
   blushColor      Int
   font            Int
   item            Int
+  nextDiaries     Diary[]            @relation("nextUserDiary")
 }
 
 model Friend {
@@ -36,10 +37,22 @@ model Friend {
 }
 
 model Diary {
-  id         Int      @id @default(autoincrement())
-  title      String   @db.VarChar(20)
-  created_at DateTime @default(now())
-  Users      User[]
+  id           Int                @id @default(autoincrement())
+  title        String             @db.VarChar(20)
+  created_at   DateTime           @default(now())
+  chamyeoUsers ChamyeoUserDiary[]
+  nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id])
+  nextUserId   String?            @db.Char(13)
+}
+
+model ChamyeoUserDiary {
+  diary   Diary  @relation(fields: [diaryId], references: [id])
+  diaryId Int
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @db.Char(13)
+  order   Int
+
+  @@id([diaryId, userId])
 }
 
 model Page {
