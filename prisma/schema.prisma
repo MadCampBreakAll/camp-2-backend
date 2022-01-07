@@ -11,16 +11,28 @@ datasource db {
 }
 
 model User {
-  id           Int     @id
-  nickname     String  @db.VarChar(20)
-  writtenPages Page[]  @relation("user")
-  nextPages    Page[]  @relation("nextUser")
-  diaries      Diary[]
-  body         Int
-  bodyColor    String  @db.Char(7)
-  blushColor   String  @db.Char(7)
-  font         String  @db.VarChar(20)
-  item         Int
+  id              Int      @id
+  nickname        String   @db.VarChar(20)
+  friends         Friend[] @relation("userFriend")
+  friendsRelation Friend[] @relation("friendUser")
+  writtenPages    Page[]   @relation("user")
+  nextPages       Page[]   @relation("nextUser")
+  diaries         Diary[]
+  body            Int
+  bodyColor       String   @db.Char(7)
+  blushColor      String   @db.Char(7)
+  font            String   @db.VarChar(20)
+  item            Int
+}
+
+model Friend {
+  user    User @relation("userFriend", fields: [userId], references: [id])
+  userId  Int
+  friend   User @relation("friendUser", fields: [friendId], references: [id])
+  friendId Int
+  status Int
+
+  @@id([userId, friendId])
 }
 
 model Diary {
