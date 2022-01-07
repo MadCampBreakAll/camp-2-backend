@@ -24,6 +24,7 @@ model User {
   font            Int
   item            Int
   nextDiaries     Diary[]            @relation("nextUserDiary")
+  myDiaries       Diary[]
 }
 
 model Friend {
@@ -43,6 +44,8 @@ model Diary {
   chamyeoUsers ChamyeoUserDiary[]
   nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id])
   nextUserId   String?            @db.Char(13)
+  onwer        User               @relation(fields: [ownerId], references: [id])
+  ownerId      String             @db.Char(13)
 }
 
 model ChamyeoUserDiary {
