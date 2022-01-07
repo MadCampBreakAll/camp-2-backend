@@ -9,13 +9,13 @@ import { isUserExists } from "../utils/users.js";
 export const getFriends = async (req, res) => {
   const user = res.locals.user;
   const friends = await getFriendsByUser(user);
-  return res.json(friends);
+  return res.json({ status: true, users: friends });
 };
 
 export const getFriendRequest = async (req, res) => {
   const userId = res.locals.user.id;
   const pendingFriendRequests = await getPendingFriendRequests(userId);
-  return res.json(pendingFriendRequests);
+  return res.json({ status: true, users: pendingFriendRequests });
 };
 
 export const createFriendRequest = async (req, res) => {

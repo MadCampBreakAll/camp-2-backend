@@ -2,53 +2,40 @@ import client from "../client.js";
 
 export const getFriendsByUser = async (user) => {
   const userId = user.id;
-  const friends = await client.user.findUnique({
-    where: { id: userId },
+  const friends = await client.friend.findMany({
+    where: { userId, status: 2 },
     select: {
-      id: true,
-      friends: {
-        where: {
-          status: 2,
-        },
+      friend: {
         select: {
-          user: {
-            select: {
-              id: true,
-              nickname: true,
-              body: true,
-              bodyColor: true,
-              blushColor: true,
-              item: true,
-            },
-          },
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
         },
       },
     },
   });
-  const friendsRelation = await client.user.findUnique({
-    where: { id: userId },
+  const friendsRelation = await client.friend.findMany({
+    where: { friendId: userId, status: 2 },
     select: {
-      id: true,
-      friendsRelation: {
-        where: {
-          status: 2,
-        },
+      user: {
         select: {
-          user: {
-            select: {
-              id: true,
-              nickname: true,
-              body: true,
-              bodyColor: true,
-              blushColor: true,
-              item: true,
-            },
-          },
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
         },
       },
     },
   });
-  const friendsRet = [...friends.friends, ...friendsRelation.friendsRelation];
+  const friendsRet = [
+    ...friends.map((e) => e.friend),
+    ...friendsRelation.map((e) => e.user),
+  ];
   return friendsRet;
 };
 
@@ -67,8 +54,8 @@ export const isFriend = async (userId, friendId) => {
   return user.length !== 0;
 };
 
-export const getPendingFriendRequests = (userId) => {
-  return client.friend.findMany({
+export const getPendingFriendRequests = async (userId) => {
+  const users = await client.friend.findMany({
     where: { friendId: userId, status: 0 },
     select: {
       user: {
@@ -79,4 +66,5 @@ export const getPendingFriendRequests = (userId) => {
       },
     },
   });
+  return users.map((e) => e.user);
 };
