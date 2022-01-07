@@ -1,6 +1,7 @@
 import axios from "axios";
 import client from "../client.js";
 import { getUserByJWT, issueJWT } from "../utils/users.js";
+import { isUserExists } from "../utils/users.js";
 
 const getUserId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
@@ -16,14 +17,6 @@ const getUser = (kakaoId) => {
       id: kakaoId,
     },
   });
-};
-
-const isUserExists = async (kakaoId) => {
-  const user = await client.user.findUnique({
-    where: { id: kakaoId },
-    select: { id: true },
-  });
-  return Boolean(user);
 };
 
 export const loginUser = async (req, res) => {
@@ -47,12 +40,21 @@ export const loginUser = async (req, res) => {
 };
 
 export const registerUser = async (req, res) => {
-  const kakaoId = await getUserId(req.body.accessToken);
+  const accessToken = req.body.accessToken;
+  let kakaoId;
+  try {
+    kakaoId = await getUserId(accessToken);
+  } catch (e) {
+    res.json({ status: false });
+    return;
+  }
 
   if (await isUserExists(kakaoId)) {
     res.status(409).json({ status: false });
     return;
   }
+
+  delete req.body["accessToken"];
 
   const user = await client.user.create({ data: { ...req.body, id: kakaoId } });
   const jwt = issueJWT(user);
