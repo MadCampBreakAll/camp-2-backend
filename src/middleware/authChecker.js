@@ -6,7 +6,7 @@ export const authChecker = async (req, res, next) => {
     console.log(`token`, token);
     const user = await getUserByJWT(token);
     if (!user) {
-      res.status(401).json({ status: false });
+      res.json({ status: false });
     } else {
       console.log(`auth user`, user);
       res.locals.user = user;

@@ -50,7 +50,7 @@ export const registerUser = async (req, res) => {
   }
 
   if (await isUserExists(kakaoId)) {
-    res.status(409).json({ status: false });
+    res.json({ status: false });
     return;
   }
 
@@ -63,7 +63,7 @@ export const registerUser = async (req, res) => {
 
 export const getMe = async (req, res) => {
   if (!req.headers.authorization) {
-    return res.status(403).json({ status: false });
+    return res.json({ status: false });
   }
   const jwt = req.headers.authorization.split(" ")[1];
   const user = await getUserByJWT(jwt);
