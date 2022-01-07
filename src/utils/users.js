@@ -1,6 +1,14 @@
 import jwt from "jsonwebtoken";
 import client from "../client.js";
 
+export const isUserExists = async (userId) => {
+  const user = await client.user.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+  return Boolean(user);
+};
+
 export const getUserByJWT = async (token) => {
   try {
     if (!token) {
