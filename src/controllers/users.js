@@ -7,7 +7,7 @@ const getUserId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  const kakaoId = response.data.id;
+  const kakaoId = String(response.data.id);
   return kakaoId;
 };
 
@@ -62,10 +62,7 @@ export const registerUser = async (req, res) => {
 };
 
 export const getMe = async (req, res) => {
-  if (!req.headers.authorization) {
-    return res.json({ status: false });
-  }
-  const jwt = req.headers.authorization.split(" ")[1];
-  const user = await getUserByJWT(jwt);
+  const user = res.locals.user;
+  console.log("getMe", user);
   return res.json(user);
 };
