@@ -1,5 +1,6 @@
 import axios from "axios";
 import client from "../client.js";
+import { getUserByJWT, issueJWT } from "../utils/users.js";
 
 const getUserId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
@@ -38,7 +39,8 @@ export const loginUser = async (req, res) => {
   const user = await getUser(kakaoId);
 
   if (user) {
-    res.json({ ...user, status: true, register: true });
+    const jwt = issueJWT(user);
+    res.json({ status: true, ...jwt });
   } else {
     res.json({ register: false });
   }
@@ -52,7 +54,16 @@ export const registerUser = async (req, res) => {
     return;
   }
 
-  delete req.body["accessToken"];
   const user = await client.user.create({ data: { ...req.body, id: kakaoId } });
-  res.json(user);
+  const jwt = issueJWT(user);
+  res.json({ status: true, ...jwt });
+};
+
+export const getMe = async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(403).json({ status: false });
+  }
+  const jwt = req.headers.authorization.split(" ")[1];
+  const user = await getUserByJWT(jwt);
+  return res.json(user);
 };
