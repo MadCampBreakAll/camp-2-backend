@@ -1,5 +1,5 @@
 import { isUserInDiary, renewNextWritter } from "../utils/diaries.js";
-import { createPage, findDiaryInnerPages } from "../utils/pages.js";
+import { createPage, findDiaryInnerPages, isMyTurn } from "../utils/pages.js";
 
 export const createNewPage = async (req, res) => {
   const userId = res.locals.user.id;
@@ -7,6 +7,10 @@ export const createNewPage = async (req, res) => {
 
   if (!(await isUserInDiary(userId, diaryId))) {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
+  }
+
+  if (!(await isMyTurn(userId, diaryId))) {
+    return res.json({ status: false, message: "It's not my turn!" });
   }
 
   const info = req.body;
