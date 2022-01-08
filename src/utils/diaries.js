@@ -12,7 +12,7 @@ export const getUserDiaries = async (userId) => {
     select: {
       id: true,
       title: true,
-      created_at: true,
+      createdAt: true,
       nextUser: {
         select: {
           id: true,

@@ -39,7 +39,7 @@ model Friend {
 model Diary {
   id           Int                @id @default(autoincrement())
   title        String             @db.VarChar(20)
-  created_at   DateTime           @default(now())
+  createdAt   DateTime           @default(now())
   chamyeoUsers ChamyeoUserDiary[]
   nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id])
   nextUserId   String?            @db.Char(13)
@@ -66,7 +66,7 @@ model Page {
   diaryId    Int
   title      String   @db.VarChar(20)
   body       String   @db.Text
-  created_at DateTime @default(now())
+  createdAt DateTime @default(now())
   color      String   @db.Char(7)
   img        String   @db.VarChar(255)
 }

@@ -41,7 +41,7 @@ export const findDiaryInnerPages = (diaryId) => {
       body: true,
       color: true,
       img: true,
-      created_at: true,
+      createdAt: true,
       user: {
         select: {
           id: true,
