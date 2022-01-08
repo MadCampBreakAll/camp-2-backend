@@ -3,6 +3,7 @@ import {
   getFriendsByUser,
   getPendingFriendRequests,
   isFriend,
+  searchFriendWithName,
 } from "../utils/friends.js";
 import { isUserExists } from "../utils/users.js";
 
@@ -66,4 +67,18 @@ export const acceptFriendRequest = async (req, res) => {
     });
     return res.json({ status: true });
   }
+};
+
+export const searchUser = async (req, res) => {
+  const nickname = req.body.nickname;
+  if (nickname == null) {
+    return res.json({ status: false });
+  }
+  const friend = await searchFriendWithName(nickname);
+
+  if (!friend) {
+    return res.json({ status: false });
+  } 
+
+  return res.json({ status: true, user: friend });
 };

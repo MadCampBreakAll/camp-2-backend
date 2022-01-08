@@ -68,3 +68,16 @@ export const getPendingFriendRequests = async (userId) => {
   });
   return users.map((e) => e.user);
 };
+
+export const searchFriendWithName = async (nickname) => {
+  const friend = await client.user.findFirst({
+    where: {
+      nickname,
+    },
+    select: {
+      id: true,
+      nickname: true,
+    },
+  });
+  return friend;
+};
