@@ -1,4 +1,4 @@
-import { isUserInDiary } from "../utils/diaries.js";
+import { isUserInDiary, renewNextWritter } from "../utils/diaries.js";
 import { createPage, findDiaryInnerPages } from "../utils/pages.js";
 
 export const createNewPage = async (req, res) => {
@@ -12,6 +12,7 @@ export const createNewPage = async (req, res) => {
   const info = req.body;
 
   const page = await createPage({ userId, ...info });
+  await renewNextWritter(diaryId);
   return res.json({ status: true, page });
 };
 
