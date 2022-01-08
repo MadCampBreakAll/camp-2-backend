@@ -80,3 +80,16 @@ export const createDiary = async (info) => {
 
   return diary;
 };
+
+export const isUserInDiary = async (userId, diaryId) => {
+  const diary = await client.chamyeoUserDiary.findFirst({
+    where: {
+      diaryId,
+      userId,
+    },
+    select: {
+      diaryId: true,
+    },
+  });
+  return diary !== null;
+};
