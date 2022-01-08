@@ -80,3 +80,58 @@ export const createDiary = async (info) => {
 
   return diary;
 };
+
+export const isUserInDiary = async (userId, diaryId) => {
+  const diary = await client.chamyeoUserDiary.findFirst({
+    where: {
+      diaryId,
+      userId,
+    },
+    select: {
+      diaryId: true,
+    },
+  });
+  return diary !== null;
+};
+
+export const renewNextWritter = async (diaryId) => {
+  const users = await client.diary.findUnique({
+    where: {
+      id: diaryId,
+    },
+    select: {
+      nextUserId: true,
+      chamyeoUsers: {
+        select: {
+          userId: true,
+        },
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+
+  let nextUserId;
+  for (let [idx, e] of users.chamyeoUsers.entries()) {
+    console.log(idx, e);
+    if (e.userId === users.nextUserId) {
+      if (idx === users.chamyeoUsers.length - 1) {
+        nextUserId = users.chamyeoUsers[0].userId;
+        break;
+      } else {
+        nextUserId = users.chamyeoUsers[idx + 1].userId;
+        break;
+      }
+    }
+  }
+
+  await client.diary.update({
+    where: {
+      id: diaryId,
+    },
+    data: {
+      nextUserId,
+    },
+  });
+};

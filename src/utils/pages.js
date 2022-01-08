@@ -16,3 +16,41 @@ export const createPage = async (info) => {
 
   return page;
 };
+
+export const isMyTurn = async (userId, diaryId) => {
+  const diary = await client.diary.findFirst({
+    where: {
+      id: diaryId,
+      nextUserId: userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return diary !== null;
+};
+
+export const findDiaryInnerPages = (diaryId) => {
+  return client.page.findMany({
+    where: {
+      diaryId,
+    },
+    select: {
+      id: true,
+      title: true,
+      body: true,
+      color: true,
+      img: true,
+      user: {
+        select: {
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
+        },
+      },
+    },
+  });
+};
