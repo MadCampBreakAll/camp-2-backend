@@ -64,5 +64,5 @@ export const registerUser = async (req, res) => {
 export const getMe = async (req, res) => {
   const user = res.locals.user;
   console.log("getMe", user);
-  return res.json(user);
+  return res.json({ status: true, user });
 };
