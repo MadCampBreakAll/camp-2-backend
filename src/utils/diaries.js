@@ -114,7 +114,6 @@ export const renewNextWritter = async (diaryId) => {
 
   let nextUserId;
   for (let [idx, e] of users.chamyeoUsers.entries()) {
-    console.log(idx, e);
     if (e.userId === users.nextUserId) {
       if (idx === users.chamyeoUsers.length - 1) {
         nextUserId = users.chamyeoUsers[0].userId;
