@@ -94,7 +94,7 @@ export const isUserInDiary = async (userId, diaryId) => {
   return diary !== null;
 };
 
-export const renewNextWritter = async (diaryId) => {
+export const getNextWirtter = async (diaryId) => {
   const users = await client.diary.findUnique({
     where: {
       id: diaryId,
@@ -112,19 +112,18 @@ export const renewNextWritter = async (diaryId) => {
     },
   });
 
-  let nextUserId;
   for (let [idx, e] of users.chamyeoUsers.entries()) {
     if (e.userId === users.nextUserId) {
       if (idx === users.chamyeoUsers.length - 1) {
-        nextUserId = users.chamyeoUsers[0].userId;
-        break;
+        return users.chamyeoUsers[0].userId;
       } else {
-        nextUserId = users.chamyeoUsers[idx + 1].userId;
-        break;
+        return users.chamyeoUsers[idx + 1].userId;
       }
     }
   }
+};
 
+export const renewNextWritter = async (diaryId, nextUserId) => {
   await client.diary.update({
     where: {
       id: diaryId,

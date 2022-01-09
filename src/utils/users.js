@@ -34,3 +34,47 @@ export const issueJWT = (user) => {
     token,
   };
 };
+
+export const avatarChange = async (info) => {
+  const { userId, body, bodyColor, blushColor } = info;
+  await client.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      ...(body && { body }),
+      ...(bodyColor && { bodyColor }),
+      ...(blushColor && { blushColor }),
+    },
+    select: {
+      id: true,
+    },
+  });
+};
+
+export const UIChange = async (userId, font, backgroundColor) => {
+  await client.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      ...(font && { font }),
+      ...(backgroundColor && { backgroundColor }),
+    },
+    select: {
+      id: true,
+    },
+  });
+};
+
+export const isNicknameAvailable = async (nickname) => {
+  const user = await client.user.findFirst({
+    where: {
+      nickname,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return user === null;
+};
