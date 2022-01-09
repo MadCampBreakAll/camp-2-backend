@@ -53,5 +53,8 @@ export const findDiaryInnerPages = (diaryId) => {
         },
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
