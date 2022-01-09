@@ -45,8 +45,8 @@ model Diary {
   chamyeoUsers ChamyeoUserDiary[]
   nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id], onDelete: SetNull)
   nextUserId   String?            @db.Char(13)
-  owner        User               @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-  ownerId      String             @db.Char(13)
+  owner        User?              @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId      String?            @db.Char(13)
   pages        Page[]
 }
 
@@ -62,8 +62,8 @@ model ChamyeoUserDiary {
 
 model Page {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id], name: "user", onDelete: SetNull)
-  userId     String   @db.Char(13)
+  user       User?     @relation(fields: [userId], references: [id], name: "user", onDelete: SetNull)
+  userId     String?   @db.Char(13)
   nextUser   User?    @relation(fields: [nextUserId], references: [id], name: "nextPageUser", onDelete: SetNull)
   nextUserId String?  @db.Char(13)
   diary      Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
