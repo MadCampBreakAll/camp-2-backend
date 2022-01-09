@@ -70,15 +70,16 @@ export const acceptFriendRequest = async (req, res) => {
 };
 
 export const searchUser = async (req, res) => {
+  const userNickName = res.locals.user.nickname;
   const nickname = req.body.nickname;
-  if (nickname == null) {
+  if (nickname == null || userNickName === nickname) {
     return res.json({ status: false });
   }
   const friend = await searchFriendWithName(nickname);
 
   if (!friend) {
     return res.json({ status: false });
-  } 
+  }
 
   return res.json({ status: true, user: friend });
 };
