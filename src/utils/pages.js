@@ -1,11 +1,12 @@
 import client from "../client.js";
 
 export const createPage = async (info) => {
-  const { userId, diaryId, title, body, color, img } = info;
+  const { userId, nextUserId, diaryId, title, body, color, img } = info;
 
   const page = await client.page.create({
     data: {
       userId,
+      nextUserId,
       diaryId,
       title,
       body,
@@ -43,6 +44,16 @@ export const findDiaryInnerPages = (diaryId) => {
       img: true,
       createdAt: true,
       user: {
+        select: {
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
+        },
+      },
+      nextUser: {
         select: {
           id: true,
           nickname: true,

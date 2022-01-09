@@ -1,4 +1,8 @@
-import { isUserInDiary, renewNextWritter } from "../utils/diaries.js";
+import {
+  getNextWirtter,
+  isUserInDiary,
+  renewNextWritter,
+} from "../utils/diaries.js";
 import { createPage, findDiaryInnerPages, isMyTurn } from "../utils/pages.js";
 
 export const createNewPage = async (req, res) => {
@@ -15,8 +19,12 @@ export const createNewPage = async (req, res) => {
 
   const info = { ...req.body, diaryId, img: req.file?.location };
 
-  const page = await createPage({ userId, ...info });
-  await renewNextWritter(diaryId);
+  const nextUserId = await getNextWirtter(diaryId);
+  console.log(`nextUserId`, nextUserId);
+
+  const page = await createPage({ ...info, userId, nextUserId });
+  await renewNextWritter(diaryId, nextUserId);
+
   return res.json({ status: true, page });
 };
 

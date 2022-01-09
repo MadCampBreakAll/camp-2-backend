@@ -16,6 +16,7 @@ model User {
   friends         Friend[]           @relation("userFriend")
   friendsRelation Friend[]           @relation("friendUser")
   writtenPages    Page[]             @relation("user")
+  nextPages       Page[]             @relation("nextPageUser")
   chamyeoDiaries  ChamyeoUserDiary[]
   body            Int
   bodyColor       Int
@@ -39,13 +40,13 @@ model Friend {
 model Diary {
   id           Int                @id @default(autoincrement())
   title        String             @db.VarChar(20)
-  createdAt   DateTime           @default(now())
+  createdAt    DateTime           @default(now())
   chamyeoUsers ChamyeoUserDiary[]
   nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id])
   nextUserId   String?            @db.Char(13)
   owner        User               @relation(fields: [ownerId], references: [id])
   ownerId      String             @db.Char(13)
-  pages         Page[]
+  pages        Page[]
 }
 
 model ChamyeoUserDiary {
@@ -62,11 +63,13 @@ model Page {
   id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id], name: "user")
   userId     String   @db.Char(13)
+  nextUser   User     @relation(fields: [nextUserId], references: [id], name: "nextPageUser")
+  nextUserId String   @db.Char(13)
   diary      Diary    @relation(fields: [diaryId], references: [id])
   diaryId    Int
   title      String   @db.VarChar(20)
   body       String   @db.Text
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
   color      String   @db.Char(7)
   img        String   @db.VarChar(255)
 }
