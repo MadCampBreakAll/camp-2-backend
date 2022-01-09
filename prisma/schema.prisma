@@ -21,6 +21,7 @@ model User {
   body            Int
   bodyColor       Int
   blushColor      Int
+  backgroundColor Int                @default(0)
   font            Int
   item            Int
   nextDiaries     Diary[]            @relation("nextUserDiary")

@@ -1,6 +1,6 @@
 import axios from "axios";
 import client from "../client.js";
-import { getUserByJWT, issueJWT } from "../utils/users.js";
+import { avatarChange, UIChange, issueJWT } from "../utils/users.js";
 import { isUserExists } from "../utils/users.js";
 
 const getUserId = async (accessToken) => {
@@ -64,4 +64,19 @@ export const registerUser = async (req, res) => {
 export const getMe = async (req, res) => {
   const user = res.locals.user;
   return res.json({ status: true, user });
+};
+
+export const updateAvatar = async (req, res) => {
+  const userId = res.locals.user.id;
+  console.log(`userId`, userId);
+  await avatarChange({ ...req.body, userId });
+  return res.json({ status: true });
+};
+
+export const updateUI = async (req, res) => {
+  const userId = res.locals.user.id;
+  const font = parseInt(req.body.font);
+  const backgroundColor = parseInt(req.body.backgroundColor);
+  await UIChange(userId, font, backgroundColor);
+  return res.json({ status: true });
 };
