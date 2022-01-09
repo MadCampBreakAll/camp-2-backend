@@ -1,4 +1,4 @@
-const wrapAsync = (fn) => (req, res, next) => {
+export const wrapAsync = (fn) => (req, res, next) => {
   fn(req, res, next).catch((e) =>
     res.status(200).json({ status: false, message: e?.message })
   );

@@ -3,7 +3,7 @@ import { createPage, findDiaryInnerPages, isMyTurn } from "../utils/pages.js";
 
 export const createNewPage = async (req, res) => {
   const userId = res.locals.user.id;
-  const diaryId = req.body.diaryId;
+  const diaryId = parseInt(req.body.diaryId);
 
   if (!(await isUserInDiary(userId, diaryId))) {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
@@ -13,7 +13,7 @@ export const createNewPage = async (req, res) => {
     return res.json({ status: false, message: "It's not my turn!" });
   }
 
-  const info = req.body;
+  const info = { ...req.body, diaryId, img: req.file?.location };
 
   const page = await createPage({ userId, ...info });
   await renewNextWritter(diaryId);
