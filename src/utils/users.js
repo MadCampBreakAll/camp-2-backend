@@ -66,3 +66,15 @@ export const UIChange = async (userId, font, backgroundColor) => {
     },
   });
 };
+
+export const isNicknameAvailable = async (nickname) => {
+  const user = await client.user.findFirst({
+    where: {
+      nickname,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return user === null;
+};

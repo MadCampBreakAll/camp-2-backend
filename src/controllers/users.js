@@ -1,6 +1,11 @@
 import axios from "axios";
 import client from "../client.js";
-import { avatarChange, UIChange, issueJWT } from "../utils/users.js";
+import {
+  avatarChange,
+  UIChange,
+  issueJWT,
+  isNicknameAvailable,
+} from "../utils/users.js";
 import { isUserExists } from "../utils/users.js";
 
 const getUserId = async (accessToken) => {
@@ -79,4 +84,12 @@ export const updateUI = async (req, res) => {
   const backgroundColor = parseInt(req.body.backgroundColor);
   await UIChange(userId, font, backgroundColor);
   return res.json({ status: true });
+};
+
+export const checkNickname = async (req, res) => {
+  const nickname = req.query.nickname;
+  if (nickname == null) {
+    return res.json({ status: false });
+  }
+  return res.json({ status: await isNicknameAvailable(nickname) });
 };
