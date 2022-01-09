@@ -5,12 +5,12 @@ export const authChecker = async (req, res, next) => {
     const token = req.headers.authorization.split("Bearer ")[1];
     const user = await getUserByJWT(token);
     if (!user) {
-      res.json({ status: false, message: "Token is not valid!" });
+      res.json({ login: false, message: "Token is not valid!" });
     } else {
       res.locals.user = user;
       next();
     }
   } else {
-    res.json({ status: false, message: "Must provide authorization header." });
+    res.json({ login: false, message: "Must provide authorization header." });
   }
 };
