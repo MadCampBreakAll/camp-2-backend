@@ -22,6 +22,7 @@ model User {
   bodyColor       Int
   blushColor      Int
   backgroundColor String             @default("#fff1e6") @db.Char(7)
+  backgroundPaper Int                @default(0)
   font            Int
   item            Int
   kakaoId         String             @unique @db.VarChar(20)

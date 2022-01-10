@@ -2,22 +2,21 @@ import jwt from "jsonwebtoken";
 import client from "../client.js";
 
 export const getUserIdByKakaoId = async (kakaoId) => {
-  const userId = (
-    await client.user.findUnique({
-      where: {
-        kakaoId,
-      },
-      select: {
-        id: true,
-      },
-    })
-  ).id;
-  return userId;
+  const user = await client.user.findUnique({
+    where: {
+      kakaoId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return user?.id;
 };
 
-export const isUserExists = async (kakaoId) => {
+export const isUserExists = async (userId) => {
   const user = await client.user.findUnique({
-    where: { kakaoId },
+    where: { id: userId },
     select: { id: true },
   });
   return user !== null;
@@ -40,6 +39,7 @@ export const getUserByJWT = async (token) => {
         item: true,
         font: true,
         backgroundColor: true,
+        backgroundPaper: true,
       },
     });
     if (user) {
@@ -78,7 +78,12 @@ export const avatarChange = async (info) => {
   });
 };
 
-export const UIChange = async (userId, font, backgroundColor) => {
+export const UIChange = async (
+  userId,
+  font,
+  backgroundColor,
+  backgroundPaper
+) => {
   await client.user.update({
     where: {
       id: userId,
@@ -86,6 +91,7 @@ export const UIChange = async (userId, font, backgroundColor) => {
     data: {
       ...(font && { font }),
       ...(backgroundColor && { backgroundColor }),
+      ...(backgroundPaper && { backgroundPaper }),
     },
     select: {
       id: true,
