@@ -73,7 +73,6 @@ export const getMe = async (req, res) => {
 
 export const updateAvatar = async (req, res) => {
   const userId = res.locals.user.id;
-  console.log(`userId`, userId);
   await avatarChange({ ...req.body, userId });
   return res.json({ status: true });
 };
@@ -81,7 +80,7 @@ export const updateAvatar = async (req, res) => {
 export const updateUI = async (req, res) => {
   const userId = res.locals.user.id;
   const font = parseInt(req.body.font);
-  const backgroundColor = parseInt(req.body.backgroundColor);
+  const backgroundColor = req.body.backgroundColor;
   await UIChange(userId, font, backgroundColor);
   return res.json({ status: true });
 };
