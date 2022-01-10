@@ -8,7 +8,7 @@ import {
 } from "../utils/users.js";
 import { isUserExists } from "../utils/users.js";
 
-const getUserId = async (accessToken) => {
+const getKakaoId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -19,7 +19,7 @@ const getUserId = async (accessToken) => {
 const getUser = (kakaoId) => {
   return client.user.findUnique({
     where: {
-      id: kakaoId,
+      kakaoId,
     },
   });
 };
@@ -28,7 +28,7 @@ export const loginUser = async (req, res) => {
   const accessToken = req.body.accessToken;
   let kakaoId;
   try {
-    kakaoId = await getUserId(accessToken);
+    kakaoId = await getKakaoId(accessToken);
   } catch (e) {
     res.json({ status: false });
     return;
@@ -48,11 +48,12 @@ export const registerUser = async (req, res) => {
   const accessToken = req.body.accessToken;
   let kakaoId;
   try {
-    kakaoId = await getUserId(accessToken);
+    kakaoId = await getKakaoId(accessToken);
   } catch (e) {
     res.json({ status: false });
     return;
   }
+  console.log(`kakaoId`, kakaoId);
 
   if (await isUserExists(kakaoId)) {
     res.json({ status: false });
@@ -61,7 +62,7 @@ export const registerUser = async (req, res) => {
 
   delete req.body["accessToken"];
 
-  const user = await client.user.create({ data: { ...req.body, id: kakaoId } });
+  const user = await client.user.create({ data: { ...req.body, kakaoId } });
   const jwt = issueJWT(user);
   res.json({ status: true, ...jwt });
 };

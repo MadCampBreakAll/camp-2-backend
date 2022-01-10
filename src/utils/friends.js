@@ -62,6 +62,10 @@ export const getPendingFriendRequests = async (userId) => {
         select: {
           id: true,
           nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
         },
       },
     },

@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id              String             @id @db.Char(13)
+  id              Int                @id @default(autoincrement())
   nickname        String             @unique @db.VarChar(20)
   friends         Friend[]           @relation("userFriend")
   friendsRelation Friend[]           @relation("friendUser")
@@ -21,18 +21,19 @@ model User {
   body            Int
   bodyColor       Int
   blushColor      Int
-  backgroundColor String             @db.Char(7)
+  backgroundColor String             @default("#fff1e6") @db.Char(7)
   font            Int
   item            Int
+  kakaoId         String             @unique @db.VarChar(20)
   nextDiaries     Diary[]            @relation("nextUserDiary")
   myDiaries       Diary[]
 }
 
 model Friend {
-  user     User   @relation("userFriend", fields: [userId], references: [id], onDelete: Cascade)
-  userId   String @db.Char(13)
-  friend   User   @relation("friendUser", fields: [friendId], references: [id], onDelete: Cascade)
-  friendId String @db.Char(13)
+  user     User @relation("userFriend", fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  friend   User @relation("friendUser", fields: [friendId], references: [id], onDelete: Cascade)
+  friendId Int
   status   Int
 
   @@id([userId, friendId])
@@ -44,17 +45,17 @@ model Diary {
   createdAt    DateTime           @default(now())
   chamyeoUsers ChamyeoUserDiary[]
   nextUser     User?              @relation("nextUserDiary", fields: [nextUserId], references: [id], onDelete: SetNull)
-  nextUserId   String?            @db.Char(13)
+  nextUserId   Int?
   owner        User?              @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-  ownerId      String?            @db.Char(13)
+  ownerId      Int?
   pages        Page[]
 }
 
 model ChamyeoUserDiary {
-  diary   Diary  @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  diary   Diary @relation(fields: [diaryId], references: [id], onDelete: Cascade)
   diaryId Int
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String @db.Char(13)
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
   order   Int
 
   @@id([diaryId, userId])
@@ -63,9 +64,9 @@ model ChamyeoUserDiary {
 model Page {
   id         Int      @id @default(autoincrement())
   user       User?    @relation(fields: [userId], references: [id], name: "user", onDelete: SetNull)
-  userId     String?  @db.Char(13)
+  userId     Int?
   nextUser   User?    @relation(fields: [nextUserId], references: [id], name: "nextPageUser", onDelete: SetNull)
-  nextUserId String?  @db.Char(13)
+  nextUserId Int?
   diary      Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
   diaryId    Int
   title      String   @db.VarChar(20)
