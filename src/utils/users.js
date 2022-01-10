@@ -68,9 +68,9 @@ export const avatarChange = async (info) => {
       id: userId,
     },
     data: {
-      ...(body && { body }),
-      ...(bodyColor && { bodyColor }),
-      ...(blushColor && { blushColor }),
+      ...(body !== undefined && { body }),
+      ...(bodyColor !== undefined && { bodyColor }),
+      ...(blushColor !== undefined && { blushColor }),
     },
     select: {
       id: true,
@@ -89,9 +89,9 @@ export const UIChange = async (
       id: userId,
     },
     data: {
-      ...(font && { font }),
-      ...(backgroundColor && { backgroundColor }),
-      ...(backgroundPaper && { backgroundPaper }),
+      ...(!Number.isNaN(backgroundColor) && { font }),
+      ...(backgroundColor !== undefined && { backgroundColor }),
+      ...(!Number.isNaN(backgroundPaper) && { backgroundPaper }),
     },
     select: {
       id: true,

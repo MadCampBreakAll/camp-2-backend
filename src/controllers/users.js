@@ -67,7 +67,6 @@ export const getMe = async (req, res) => {
 
 export const updateAvatar = async (req, res) => {
   const userId = res.locals.user.id;
-  console.log(`userId`, userId);
   await avatarChange({ ...req.body, userId });
   return res.json({ status: true });
 };

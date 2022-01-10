@@ -10,6 +10,10 @@ export const createNewPage = async (req, res) => {
   const userId = res.locals.user.id;
   const diaryId = parseInt(req.body.diaryId);
 
+  if (Number.isNaN(diaryId)) {
+    return res.json({ status: false });
+  }
+
   if (!(await isUserInDiary(userId, diaryId))) {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
   }
@@ -33,7 +37,7 @@ export const getDiaryPages = async (req, res) => {
   const userId = res.locals.user.id;
   const diaryId = parseInt(req.query.diaryId);
 
-  if (diaryId == null) {
+  if (Number.isNaN(diaryId)) {
     return res.json({
       status: true,
       message: "Must provied diaryId with query parameter.",
