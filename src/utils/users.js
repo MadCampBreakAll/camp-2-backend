@@ -14,9 +14,9 @@ export const getUserIdByKakaoId = async (kakaoId) => {
   return user?.id;
 };
 
-export const isUserExists = async (kakaoId) => {
+export const isUserExists = async (userId) => {
   const user = await client.user.findUnique({
-    where: { kakaoId },
+    where: { id: userId },
     select: { id: true },
   });
   return user !== null;
