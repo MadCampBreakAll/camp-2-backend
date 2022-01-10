@@ -53,8 +53,13 @@ export const registerUser = async (req, res) => {
 
   delete req.body["accessToken"];
 
-  const user = await client.user.create({ data: { ...req.body, kakaoId } });
-  const jwt = issueJWT(user);
+  const userId = (
+    await client.user.create({
+      data: { ...req.body, kakaoId },
+      select: { id: true },
+    })
+  ).id;
+  const jwt = issueJWT(userId);
   res.json({ status: true, ...jwt });
 };
 
