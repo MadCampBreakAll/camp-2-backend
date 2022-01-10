@@ -79,7 +79,12 @@ export const avatarChange = async (info) => {
   });
 };
 
-export const UIChange = async (userId, font, backgroundColor) => {
+export const UIChange = async (
+  userId,
+  font,
+  backgroundColor,
+  backgroundPaper
+) => {
   await client.user.update({
     where: {
       id: userId,
@@ -87,6 +92,7 @@ export const UIChange = async (userId, font, backgroundColor) => {
     data: {
       ...(font && { font }),
       ...(backgroundColor && { backgroundColor }),
+      ...(backgroundPaper && { backgroundPaper }),
     },
     select: {
       id: true,

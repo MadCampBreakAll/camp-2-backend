@@ -76,7 +76,8 @@ export const updateUI = async (req, res) => {
   const userId = res.locals.user.id;
   const font = parseInt(req.body.font);
   const backgroundColor = req.body.backgroundColor;
-  await UIChange(userId, font, backgroundColor);
+  const backgroundPaper = parseInt(req.body.backgroundPaper);
+  await UIChange(userId, font, backgroundColor, backgroundPaper);
   return res.json({ status: true });
 };
 
