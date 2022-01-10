@@ -70,7 +70,7 @@ export const issueJWT = (userId) => {
 };
 
 export const avatarChange = async (info) => {
-  const { userId, body, bodyColor, blushColor } = info;
+  const { userId, body, bodyColor, blushColor, item } = info;
   await client.user.update({
     where: {
       id: userId,
@@ -79,6 +79,7 @@ export const avatarChange = async (info) => {
       ...(body !== undefined && { body }),
       ...(bodyColor !== undefined && { bodyColor }),
       ...(blushColor !== undefined && { blushColor }),
+      ...(item !== undefined && { item }),
     },
     select: {
       id: true,
