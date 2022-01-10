@@ -1,6 +1,7 @@
 import axios from "axios";
 import client from "../client.js";
 import {
+  getUserIdByKakaoId,
   avatarChange,
   UIChange,
   issueJWT,
@@ -16,14 +17,6 @@ const getKakaoId = async (accessToken) => {
   return kakaoId;
 };
 
-const getUser = (kakaoId) => {
-  return client.user.findUnique({
-    where: {
-      kakaoId,
-    },
-  });
-};
-
 export const loginUser = async (req, res) => {
   const accessToken = req.body.accessToken;
   let kakaoId;
@@ -34,10 +27,10 @@ export const loginUser = async (req, res) => {
     return;
   }
 
-  const user = await getUser(kakaoId);
+  const userId = await getUserIdByKakaoId(kakaoId);
 
-  if (user) {
-    const jwt = issueJWT(user);
+  if (userId) {
+    const jwt = issueJWT(userId);
     res.json({ status: true, ...jwt });
   } else {
     res.json({ register: false });
