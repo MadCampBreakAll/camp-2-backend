@@ -6,7 +6,7 @@ import {
   isFriend,
   searchFriendWithName,
 } from "../utils/friends.js";
-import { isUserExists } from "../utils/users.js";
+import { isUserExistsByKakaoId, isUserExistsByUserId } from "../utils/users.js";
 
 export const getFriends = async (req, res) => {
   const user = res.locals.user;
@@ -29,7 +29,7 @@ export const createFriendRequest = async (req, res) => {
   const userId = res.locals.user.id;
   const friendId = req.body.friendId;
 
-  if (!(await isUserExists(friendId))) {
+  if (!(await isUserExistsByUserId(friendId))) {
     return res.json({ status: false });
   }
 

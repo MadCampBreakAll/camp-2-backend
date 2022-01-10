@@ -7,7 +7,7 @@ import {
   issueJWT,
   isNicknameAvailable,
 } from "../utils/users.js";
-import { isUserExists } from "../utils/users.js";
+import { isUserExistsByKakaoId } from "../utils/users.js";
 
 const getKakaoId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
@@ -47,7 +47,7 @@ export const registerUser = async (req, res) => {
   }
   console.log(`kakaoId`, kakaoId);
 
-  if (await isUserExists(kakaoId)) {
+  if (await isUserExistsByKakaoId(kakaoId)) {
     return res.json({ status: false });
   }
 
