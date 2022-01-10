@@ -40,6 +40,7 @@ export const getUserByJWT = async (token) => {
         item: true,
         font: true,
         backgroundColor: true,
+        backgroundPaper: true,
       },
     });
     if (user) {
