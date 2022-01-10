@@ -1,4 +1,5 @@
 import {
+  getDiaryInfo,
   getNextWirtter,
   isUserInDiary,
   renewNextWritter,
@@ -43,6 +44,8 @@ export const getDiaryPages = async (req, res) => {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
   }
 
+  const diaryInfo = await getDiaryInfo(diaryId);
   const pages = await findDiaryInnerPages(diaryId);
-  return res.json({ status: true, pages });
+
+  return res.json({ status: true, diary: diaryInfo, pages });
 };
