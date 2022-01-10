@@ -43,14 +43,12 @@ export const registerUser = async (req, res) => {
   try {
     kakaoId = await getKakaoId(accessToken);
   } catch (e) {
-    res.json({ status: false });
-    return;
+    return res.json({ status: false });
   }
   console.log(`kakaoId`, kakaoId);
 
   if (await isUserExists(kakaoId)) {
-    res.json({ status: false });
-    return;
+    return res.json({ status: false });
   }
 
   delete req.body["accessToken"];
