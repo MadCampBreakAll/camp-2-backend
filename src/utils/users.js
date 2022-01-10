@@ -1,12 +1,26 @@
 import jwt from "jsonwebtoken";
 import client from "../client.js";
 
-export const isUserExists = async (userId) => {
+export const getUserIdByKakaoId = async (kakaoId) => {
+  const userId = (
+    await client.user.findUnique({
+      where: {
+        kakaoId,
+      },
+      select: {
+        id: true,
+      },
+    })
+  ).id;
+  return userId;
+};
+
+export const isUserExists = async (kakaoId) => {
   const user = await client.user.findUnique({
-    where: { id: userId },
+    where: { kakaoId },
     select: { id: true },
   });
-  return Boolean(user);
+  return user !== null;
 };
 
 export const getUserByJWT = async (token) => {
@@ -15,7 +29,19 @@ export const getUserByJWT = async (token) => {
       return null;
     }
     const { id } = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await client.user.findUnique({ where: { id } });
+    const user = await client.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        nickname: true,
+        body: true,
+        bodyColor: true,
+        blushColor: true,
+        item: true,
+        font: true,
+        backgroundColor: true,
+      },
+    });
     if (user) {
       return user;
     } else {
@@ -26,8 +52,8 @@ export const getUserByJWT = async (token) => {
   }
 };
 
-export const issueJWT = (user) => {
-  const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+export const issueJWT = (userId) => {
+  const token = jwt.sign({ id: userId }, process.env.SECRET_KEY, {
     expiresIn: "30d",
   });
   return {
