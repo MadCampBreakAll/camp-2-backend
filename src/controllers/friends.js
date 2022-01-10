@@ -2,6 +2,7 @@ import client from "../client.js";
 import {
   getFriendsByUser,
   getPendingFriendRequests,
+  getAskedFriendRequests,
   isFriend,
   searchFriendWithName,
 } from "../utils/friends.js";
@@ -16,7 +17,12 @@ export const getFriends = async (req, res) => {
 export const getFriendRequest = async (req, res) => {
   const userId = res.locals.user.id;
   const pendingFriendRequests = await getPendingFriendRequests(userId);
-  return res.json({ status: true, users: pendingFriendRequests });
+  const askedFriendRequests = await getAskedFriendRequests(userId);
+  return res.json({
+    status: true,
+    pending: pendingFriendRequests,
+    asked: askedFriendRequests,
+  });
 };
 
 export const createFriendRequest = async (req, res) => {
