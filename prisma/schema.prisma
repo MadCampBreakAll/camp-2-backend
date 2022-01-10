@@ -21,7 +21,7 @@ model User {
   body            Int
   bodyColor       Int
   blushColor      Int
-  backgroundColor Int                @default(0)
+  backgroundColor String             @db.Char(7)
   font            Int
   item            Int
   nextDiaries     Diary[]            @relation("nextUserDiary")
@@ -62,8 +62,8 @@ model ChamyeoUserDiary {
 
 model Page {
   id         Int      @id @default(autoincrement())
-  user       User?     @relation(fields: [userId], references: [id], name: "user", onDelete: SetNull)
-  userId     String?   @db.Char(13)
+  user       User?    @relation(fields: [userId], references: [id], name: "user", onDelete: SetNull)
+  userId     String?  @db.Char(13)
   nextUser   User?    @relation(fields: [nextUserId], references: [id], name: "nextPageUser", onDelete: SetNull)
   nextUserId String?  @db.Char(13)
   diary      Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
