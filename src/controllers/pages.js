@@ -39,7 +39,7 @@ export const getDiaryPages = async (req, res) => {
 
   if (Number.isNaN(diaryId)) {
     return res.json({
-      status: true,
+      status: false,
       message: "Must provied diaryId with query parameter.",
     });
   }
