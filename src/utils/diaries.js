@@ -1,5 +1,51 @@
 import client from "../client.js";
 
+export const getDiaryInfo = async (diaryId) => {
+  const diary = await client.diary.findUnique({
+    where: {
+      id: diaryId,
+    },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      nextUser: {
+        select: {
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
+        },
+      },
+      chamyeoUsers: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              nickname: true,
+              body: true,
+              bodyColor: true,
+              blushColor: true,
+              item: true,
+            },
+          },
+        },
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+
+  return {
+    ...diary,
+    nextUser: diary.nextUser,
+    chamyeoUsers: diary.chamyeoUsers.map((item) => item.user),
+  };
+};
+
 export const getUserDiaries = async (userId) => {
   const diaries = await client.diary.findMany({
     where: {

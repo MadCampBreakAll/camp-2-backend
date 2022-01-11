@@ -7,7 +7,7 @@ import {
   issueJWT,
   isNicknameAvailable,
 } from "../utils/users.js";
-import { isUserExists } from "../utils/users.js";
+import { isUserExistsByKakaoId } from "../utils/users.js";
 
 const getKakaoId = async (accessToken) => {
   const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
@@ -43,20 +43,23 @@ export const registerUser = async (req, res) => {
   try {
     kakaoId = await getKakaoId(accessToken);
   } catch (e) {
-    res.json({ status: false });
-    return;
+    return res.json({ status: false });
   }
   console.log(`kakaoId`, kakaoId);
 
-  if (await isUserExists(kakaoId)) {
-    res.json({ status: false });
-    return;
+  if (await isUserExistsByKakaoId(kakaoId)) {
+    return res.json({ status: false });
   }
 
   delete req.body["accessToken"];
 
-  const user = await client.user.create({ data: { ...req.body, kakaoId } });
-  const jwt = issueJWT(user);
+  const userId = (
+    await client.user.create({
+      data: { ...req.body, kakaoId },
+      select: { id: true },
+    })
+  ).id;
+  const jwt = issueJWT(userId);
   res.json({ status: true, ...jwt });
 };
 
@@ -67,7 +70,6 @@ export const getMe = async (req, res) => {
 
 export const updateAvatar = async (req, res) => {
   const userId = res.locals.user.id;
-  console.log(`userId`, userId);
   await avatarChange({ ...req.body, userId });
   return res.json({ status: true });
 };

@@ -14,9 +14,17 @@ export const getUserIdByKakaoId = async (kakaoId) => {
   return user?.id;
 };
 
-export const isUserExists = async (userId) => {
+export const isUserExistsByUserId = async (userId) => {
   const user = await client.user.findUnique({
     where: { id: userId },
+    select: { id: true },
+  });
+  return user !== null;
+};
+
+export const isUserExistsByKakaoId = async (kakaoId) => {
+  const user = await client.user.findUnique({
+    where: { kakaoId },
     select: { id: true },
   });
   return user !== null;
@@ -62,15 +70,16 @@ export const issueJWT = (userId) => {
 };
 
 export const avatarChange = async (info) => {
-  const { userId, body, bodyColor, blushColor } = info;
+  const { userId, body, bodyColor, blushColor, item } = info;
   await client.user.update({
     where: {
       id: userId,
     },
     data: {
-      ...(body && { body }),
-      ...(bodyColor && { bodyColor }),
-      ...(blushColor && { blushColor }),
+      ...(body !== undefined && { body }),
+      ...(bodyColor !== undefined && { bodyColor }),
+      ...(blushColor !== undefined && { blushColor }),
+      ...(item !== undefined && { item }),
     },
     select: {
       id: true,
@@ -89,9 +98,9 @@ export const UIChange = async (
       id: userId,
     },
     data: {
-      ...(font && { font }),
-      ...(backgroundColor && { backgroundColor }),
-      ...(backgroundPaper && { backgroundPaper }),
+      ...(!Number.isNaN(backgroundColor) && { font }),
+      ...(backgroundColor !== undefined && { backgroundColor }),
+      ...(!Number.isNaN(backgroundPaper) && { backgroundPaper }),
     },
     select: {
       id: true,

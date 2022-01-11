@@ -1,4 +1,5 @@
 import {
+  getDiaryInfo,
   getNextWirtter,
   isUserInDiary,
   renewNextWritter,
@@ -8,6 +9,10 @@ import { createPage, findDiaryInnerPages, isMyTurn } from "../utils/pages.js";
 export const createNewPage = async (req, res) => {
   const userId = res.locals.user.id;
   const diaryId = parseInt(req.body.diaryId);
+
+  if (Number.isNaN(diaryId)) {
+    return res.json({ status: false });
+  }
 
   if (!(await isUserInDiary(userId, diaryId))) {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
@@ -32,9 +37,9 @@ export const getDiaryPages = async (req, res) => {
   const userId = res.locals.user.id;
   const diaryId = parseInt(req.query.diaryId);
 
-  if (diaryId == null) {
+  if (Number.isNaN(diaryId)) {
     return res.json({
-      status: true,
+      status: false,
       message: "Must provied diaryId with query parameter.",
     });
   }
@@ -43,6 +48,8 @@ export const getDiaryPages = async (req, res) => {
     return res.json({ status: false, message: "User is not in ChamyeoUsers." });
   }
 
+  const diaryInfo = await getDiaryInfo(diaryId);
   const pages = await findDiaryInnerPages(diaryId);
-  return res.json({ status: true, pages });
+
+  return res.json({ status: true, diary: diaryInfo, pages });
 };

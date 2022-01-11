@@ -54,6 +54,25 @@ export const isFriend = async (userId, friendId) => {
   return user.length !== 0;
 };
 
+export const getAskedFriendRequests = async (userId) => {
+  const users = await client.friend.findMany({
+    where: { userId, status: 0 },
+    select: {
+      friend: {
+        select: {
+          id: true,
+          nickname: true,
+          body: true,
+          bodyColor: true,
+          blushColor: true,
+          item: true,
+        },
+      },
+    },
+  });
+  return users.map((e) => e.friend);
+};
+
 export const getPendingFriendRequests = async (userId) => {
   const users = await client.friend.findMany({
     where: { friendId: userId, status: 0 },
